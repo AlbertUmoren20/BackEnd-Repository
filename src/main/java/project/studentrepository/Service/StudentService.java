@@ -12,8 +12,8 @@ import java.util.List;
 public interface StudentService {
 
 //    Student findByEmail(String email);
-    public Student saveStudent(Student student); //Adding into the database
-    public List<Student> getAllStudents(); //getting from the database
+    public Student saveStudent(Student student); //operation to Add students into the database
+    public List<Student> getAllStudents(); //operation to get students from the database
 
     LoginResponse loginStudent(LoginDTO loginDto);
 

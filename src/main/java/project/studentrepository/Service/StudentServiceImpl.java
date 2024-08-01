@@ -38,26 +38,30 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public LoginResponse loginStudent(LoginDTO loginDTO) {
         String msg = "";
-        Student student1 = studentRepository.findByEmail(loginDTO.getEmail()); // Explain
+        Student student1 = studentRepository.findByEmail(loginDTO.getEmail());
         if (student1 != null) {
             String password = loginDTO.getPassword();
             String encodedPassword = student1.getPassword();
-            Boolean isPwdRight = password.matches(password);
-            if (isPwdRight) {
-                Optional<Student> student =
-                        studentRepository.findOneByEmailAndPassword (loginDTO.getEmail(), encodedPassword);
+            int matricnumber = loginDTO.getMatricnumber();
+            int storedMatricNumber = student1.getMatricnumber();
+
+            Boolean isPwdRight = password.equals(encodedPassword); // Corrected password check
+            Boolean isMatricNumberRight = matricnumber == storedMatricNumber; // Matric number check
+
+            if (isPwdRight && isMatricNumberRight) {
+                Optional<Student> student = studentRepository.findOneByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
                 if (student.isPresent()) {
                     return new LoginResponse("Login Successful", true);
                 } else {
                     return new LoginResponse("Email not found", false); // Assuming this is the intended message
                 }
-            } else {
+            } else if (!isPwdRight) {
                 return new LoginResponse("Password not matched", false);
+            } else if (!isMatricNumberRight) {
+                return new LoginResponse("Matric number not matched", false);
             }
-
         }
-        return null;
+        return new LoginResponse("Email not found", false); // Assuming this is the intended message when student1 is null
     }
 }
-
 
