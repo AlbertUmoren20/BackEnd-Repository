@@ -1,14 +1,7 @@
-services:
-  - type: web
-    name: studentrepository
-    runtime: java
-    buildCommand: ./mvnw clean package -DskipTests
-    startCommand: java -jar target/*.jar
-    env: java
-    envVars:
-      - key: SPRING_PROFILES_ACTIVE
-        value: production
-      - key: DATABASE_URL
-        fromDatabase:
-          name: studentrepository-db  # PostgreSQL service name
-          property: connectionString
+envVars:
+  - key: SPRING_PROFILES_ACTIVE
+    value: production
+  - key: DATABASE_URL
+    fromDatabase:
+      name: studentrepository-db  # Matches your PostgreSQL service name in Render
+      property: connectionString
