@@ -5,3 +5,11 @@
 #    fromDatabase:
 #      name: studentrepository-db  # Matches your PostgreSQL service name in Render
 #      property: connectionString
+
+envVars:
+  - key: SPRING_DATASOURCE_URL
+    value: jdbc:postgresql://dpg-d95egnbu.../studentLogin_ma61?sslmode=require
+  - key: SPRING_DATASOURCE_USERNAME
+    value: studentlogin_ma6i_user
+  - key: SPRING_DATASOURCE_PASSWORD
+    value: k826AUm5aSujEHNG1heMEf01e7v6fZkS
