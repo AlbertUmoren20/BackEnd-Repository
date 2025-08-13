@@ -43,6 +43,12 @@ public class StudentController {
         return "New Student added";
     }
 
+    @PostMapping("/register")
+    public ResponseEntity<LoginResponse> register(@RequestBody StudentDto studentDto) {
+        LoginResponse response = studentService.registerStudent(studentDto);
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/getAll")
     public List<Student> getAllStudents() {
         return studentService.getAllStudents();
