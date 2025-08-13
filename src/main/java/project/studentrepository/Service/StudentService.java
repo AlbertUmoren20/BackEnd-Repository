@@ -15,6 +15,8 @@ public interface StudentService {
     public Student saveStudent(Student student); //operation to Add students into the database
     public List<Student> getAllStudents(); //operation to get students from the database
 
+    LoginResponse registerStudent(StudentDto studentDto);
+
     LoginResponse loginStudent(LoginDTO loginDto);
 
 }
