@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import project.studentrepository.Model.*;
 import project.studentrepository.Response.LoginResponse;
+import project.studentrepository.Service.PdfDocumentService;
 import project.studentrepository.Service.PdfFamssService;
 import project.studentrepository.Service.PdfFbmasService;
 import project.studentrepository.Service.ProjectService;
@@ -27,19 +28,22 @@ public class StudentController {
     private final ProjectService projectService;
     private final PdfFamssService pdfFamssService;
     private final PdfFbmasService pdfFbmasService;
+    private final PdfDocumentService pdfDocumentService;
 
     @Autowired
     public StudentController(StudentService studentService, ProjectService projectService,
-                             PdfFamssService pdfFamssService, PdfFbmasService pdfFbmasService) {
+                             PdfFamssService pdfFamssService, PdfFbmasService pdfFbmasService,
+                             PdfDocumentService pdfDocumentService) {
         this.studentService = studentService;
         this.projectService = projectService;
         this.pdfFamssService = pdfFamssService;
         this.pdfFbmasService = pdfFbmasService;
+        this.pdfDocumentService = pdfDocumentService;
     }
 
     @PostMapping("/add") // Adds data
     public String add(@RequestBody Student student) {
-        studentService.saveStudent(student); // Go into student service section and make this operation
+        studentService.saveStudent(student); 
         return "New Student added";
     }
 
@@ -51,7 +55,22 @@ public class StudentController {
     @PostMapping("/login")
     public ResponseEntity<?> loginStudent(@RequestBody LoginDTO logindto) {
         LoginResponse loginResponse = studentService.loginStudent(logindto);
-        return ResponseEntity.ok(loginResponse);
+        
+        // Return appropriate HTTP status codes based on login result
+        if (loginResponse.getStatus()) {
+            // Successful login
+            return ResponseEntity.ok(loginResponse);
+        } else {
+            // Failed login - determine the appropriate status code
+            String message = loginResponse.getMessage();
+            if (message != null && message.equals("Password does not match")) {
+                // Password mismatch - return 401 Unauthorized
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(loginResponse);
+            } else {
+                // Email not found or other validation errors - return 400 Bad Request
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(loginResponse);
+            }
+        }
     }
 
     @PostMapping("/famssProject")
@@ -156,6 +175,63 @@ public class StudentController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Optional.empty());
         }
+    }
+
+    // Dynamic upload endpoint for any faculty
+    @PostMapping("/upload/{facultyName}")
+    public ResponseEntity<?> uploadPdfFileDynamic(
+            @PathVariable String facultyName,
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("title") String title,
+            @RequestParam("supervisor") String supervisor,
+            @RequestParam("projectBy") String projectBy,
+            @RequestParam("department") String department,
+            @RequestParam("description") String description,
+            @RequestParam("year") Integer year) {
+        
+        // Find faculty by name or abbreviation
+        Optional<Faculty> facultyOptional = pdfDocumentService.findFacultyByNameOrAbbreviation(facultyName);
+        
+        if (facultyOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Faculty not found with name or abbreviation: " + facultyName);
+        }
+        
+        Faculty faculty = facultyOptional.get();
+        
+        PdfDocument pdfDocument = new PdfDocument();
+        pdfDocument.setFaculty(faculty);
+        pdfDocument.setTitle(title);
+        pdfDocument.setSupervisor(supervisor);
+        pdfDocument.setProjectBy(projectBy);
+        pdfDocument.setDepartment(department);
+        pdfDocument.setDescription(description);
+        pdfDocument.setYear(year);
+        
+        try {
+            pdfDocument.setPdfData(file.getBytes());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Error reading file: " + e.getMessage());
+        }
+        
+        PdfDocument savedPdfDocument = pdfDocumentService.uploadPdfFile(pdfDocument);
+        return ResponseEntity.ok(savedPdfDocument);
+    }
+
+    // Get uploads by faculty name
+    @GetMapping("/getUpload/{facultyName}")
+    public ResponseEntity<?> getUploadsByFaculty(@PathVariable String facultyName) {
+        Optional<Faculty> facultyOptional = pdfDocumentService.findFacultyByNameOrAbbreviation(facultyName);
+        
+        if (facultyOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body("Faculty not found with name or abbreviation: " + facultyName);
+        }
+        
+        Faculty faculty = facultyOptional.get();
+        List<PdfDocument> uploads = pdfDocumentService.getUploadsByFaculty(faculty.getId());
+        return ResponseEntity.ok(uploads);
     }
 
     }

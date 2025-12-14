@@ -37,7 +37,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public LoginResponse loginStudent(LoginDTO loginDTO) {
-        String msg = "";
         Student student1 = studentRepository.findByEmail(loginDTO.getEmail());
         if (student1 != null) {
             String password = loginDTO.getPassword();
@@ -45,23 +44,32 @@ public class StudentServiceImpl implements StudentService {
             int matricnumber = loginDTO.getMatricnumber();
             int storedMatricNumber = student1.getMatricnumber();
 
-            Boolean isPwdRight = password.equals(encodedPassword); // Corrected password check
+            // Validate password against database - handle null cases
+            Boolean isPwdRight = (password != null && encodedPassword != null) && password.equals(encodedPassword);
             Boolean isMatricNumberRight = matricnumber == storedMatricNumber; // Matric number check
 
             if (isPwdRight && isMatricNumberRight) {
                 Optional<Student> student = studentRepository.findOneByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
                 if (student.isPresent()) {
-                    return new LoginResponse("Login Successful", true);
+                    // Get user information
+                    Integer userLevel = student1.getLevel();
+                    String userFullname = student1.getFullname();
+                    
+                    // Detect admin by checking if email contains "admin" (case-insensitive)
+                    String email = loginDTO.getEmail().toLowerCase();
+                    String userRole = email.contains("admin") ? "admin" : "student";
+                    
+                    return new LoginResponse("Login Successful", true, userLevel, userFullname, userRole);
                 } else {
-                    return new LoginResponse("Email not found", false); // Assuming this is the intended message
+                    return new LoginResponse("Email not found", false, null, null, null); // Assuming this is the intended message
                 }
             } else if (!isPwdRight) {
-                return new LoginResponse("Password not matched", false);
+                return new LoginResponse("Password does not match", false, null, null, null);
             } else if (!isMatricNumberRight) {
-                return new LoginResponse("Matric number not matched", false);
+                return new LoginResponse("Matric number not matched", false, null, null, null);
             }
         }
-        return new LoginResponse("Email not found", false); // Assuming this is the intended message when student1 is null
+        return new LoginResponse("Email not found", false, null, null, null); // Assuming this is the intended message when student1 is null
     }
 }
 

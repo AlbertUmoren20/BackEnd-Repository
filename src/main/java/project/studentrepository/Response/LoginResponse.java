@@ -8,6 +8,9 @@ import lombok.Setter;
 public class LoginResponse {
     String message;
     Boolean status;
+    Integer userLevel;
+    String userFullname;
+    String userRole;
 
     public LoginResponse() {
     }
@@ -17,11 +20,22 @@ public class LoginResponse {
         this.status = status;
     }
 
+    public LoginResponse(String message, Boolean status, Integer userLevel, String userFullname, String userRole) {
+        this.message = message;
+        this.status = status;
+        this.userLevel = userLevel;
+        this.userFullname = userFullname;
+        this.userRole = userRole;
+    }
+
     @Override
     public String toString() {
         return "LoginResponse{" +
                 "message='" + message + '\'' +
                 ", status=" + status +
+                ", userLevel=" + userLevel +
+                ", userFullname='" + userFullname + '\'' +
+                ", userRole='" + userRole + '\'' +
                 '}';
     }
 }
