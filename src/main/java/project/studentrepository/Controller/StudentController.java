@@ -233,5 +233,4 @@ public class StudentController {
         List<PdfDocument> uploads = pdfDocumentService.getUploadsByFaculty(faculty.getId());
         return ResponseEntity.ok(uploads);
     }
-
     }
