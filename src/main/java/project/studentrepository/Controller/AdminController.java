@@ -14,7 +14,7 @@ import project.studentrepository.Service.FacultyService;
 
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins = "https://repository-react-iota.vercel.app/")
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
