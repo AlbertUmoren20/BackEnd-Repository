@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Validated
-@CrossOrigin
+@CrossOrigin(origins = "https://repository-react-iota.vercel.app/")
 @RestController
 @RequestMapping("/student")
 public class StudentController {
