@@ -1,23 +1,27 @@
-package project.studentrepository.config;
+    package project.studentrepository.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+    import org.springframework.context.annotation.Bean;
+    import org.springframework.context.annotation.Configuration;
+    import org.springframework.lang.NonNull;
+    import org.springframework.web.cors.CorsConfiguration;
+    import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+    import org.springframework.web.filter.CorsFilter;
+    import org.springframework.web.servlet.config.annotation.CorsRegistry;
+    import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.Arrays;
+    import java.util.Arrays;
 
-@Configuration
-public class WebConfig implements WebMvcConfigurer {
-    
+    @Configuration
+    public class WebConfig implements WebMvcConfigurer {
+        
     @Override
     public void addCorsMappings(@NonNull CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("https://repository-react-iota.vercel.app")
+                .allowedOriginPatterns(
+                    "https://repository-react-iota.vercel.app",
+                    "https://repository-react-*.vercel.app",
+                    "https://*.vercel.app"
+                )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
                 .allowedHeaders("*")
                 .exposedHeaders("*")
@@ -30,8 +34,13 @@ public class WebConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
-        // Allow specific origin
-        config.setAllowedOrigins(Arrays.asList("https://repository-react-iota.vercel.app"));
+        // Allow production and Vercel preview URLs using patterns
+        // This supports both production and preview deployments
+        config.setAllowedOriginPatterns(Arrays.asList(
+            "https://repository-react-iota.vercel.app",
+            "https://repository-react-*.vercel.app",
+            "https://*.vercel.app"
+        ));
         
         // Allow all HTTP methods including OPTIONS for preflight
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
@@ -53,4 +62,4 @@ public class WebConfig implements WebMvcConfigurer {
         
         return new CorsFilter(source);
     }
-}
+    }
