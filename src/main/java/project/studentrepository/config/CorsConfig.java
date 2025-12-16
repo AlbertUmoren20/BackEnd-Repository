@@ -17,7 +17,7 @@
 
             config.setAllowedOrigins(List.of(
                 "http://localhost:3000",
-                "https://repository-react-iota.vercel.app/"
+                 "https://repository-react-iota.vercel.app"
             ));
 
             config.setAllowedMethods(List.of(
