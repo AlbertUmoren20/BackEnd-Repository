@@ -1,55 +1,44 @@
-    package project.studentrepository.config;
+package project.studentrepository.config;
 
-    import org.springframework.context.annotation.Bean;
-    import org.springframework.context.annotation.Configuration;
-    import org.springframework.lang.NonNull;
-    import org.springframework.web.cors.CorsConfiguration;
-    import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-    import org.springframework.web.filter.CorsFilter;
-    import org.springframework.web.servlet.config.annotation.CorsRegistry;
-    import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
-    import java.util.Arrays;
+import java.util.Arrays;
+import java.util.Collections;
 
-    @Configuration
-    public class WebConfig implements WebMvcConfigurer {
-        
-    @Override
-    public void addCorsMappings(@NonNull CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOriginPatterns(
-                    "https://repository-react-iota.vercel.app",
-                    "https://repository-react-*.vercel.app",
-                    "https://*.vercel.app"
-                )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH")
-                .allowedHeaders("*")
-                .exposedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
-
+@Configuration
+public class WebConfig {
+    
     @Bean
-    public CorsFilter corsFilter() {
+    public FilterRegistrationBean<CorsFilter> corsFilterRegistration() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
         
         // Allow production and Vercel preview URLs using patterns
-        // This supports both production and preview deployments
+        // Patterns allow wildcards which is needed for Vercel preview deployments
         config.setAllowedOriginPatterns(Arrays.asList(
             "https://repository-react-iota.vercel.app",
             "https://repository-react-*.vercel.app",
-            "https://*.vercel.app"
+            "https://*.vercel.app",
+            "http://localhost:*",
+             "http://127.0.0.1:*"
         ));
         
         // Allow all HTTP methods including OPTIONS for preflight
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        config.setAllowedMethods(Arrays.asList(
+            "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"
+        ));
         
-        // Allow all headers
-        config.setAllowedHeaders(Arrays.asList("*"));
+        // Allow all headers (including custom headers)
+        config.setAllowedHeaders(Collections.singletonList("*"));
         
         // Expose all headers in response
-        config.setExposedHeaders(Arrays.asList("*"));
+        config.setExposedHeaders(Collections.singletonList("*"));
         
         // Allow credentials (cookies, authorization headers)
         config.setAllowCredentials(true);
@@ -60,6 +49,13 @@
         // Apply CORS configuration to all paths
         source.registerCorsConfiguration("/**", config);
         
-        return new CorsFilter(source);
+        // Create filter registration with highest priority to ensure it runs first
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(
+            new CorsFilter(source)
+        );
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        bean.setUrlPatterns(Collections.singletonList("/*"));
+        
+        return bean;
     }
-    }
+}

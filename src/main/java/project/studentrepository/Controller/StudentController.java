@@ -57,6 +57,11 @@ public class StudentController {
         return studentService.getAllStudents();
     }
 
+    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
+    public ResponseEntity<?> handleLoginOptions() {
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> loginStudent(@RequestBody LoginDTO logindto) {
         LoginResponse loginResponse = studentService.loginStudent(logindto);
