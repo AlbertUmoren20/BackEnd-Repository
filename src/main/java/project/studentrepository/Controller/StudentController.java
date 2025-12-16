@@ -19,11 +19,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Validated
-@CrossOrigin(
-    origins ="https://repository-react-iota.vercel.app/",
-    allowedHeaders = "*",
-    methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS} 
-)
+// @CrossOrigin(
+//     origins ="https://repository-react-iota.vercel.app/",
+//     allowedHeaders = "*",
+//     methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS} 
+// )
 
 @RestController
 @RequestMapping("/student")
