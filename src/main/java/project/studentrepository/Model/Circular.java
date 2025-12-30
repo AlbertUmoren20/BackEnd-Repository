@@ -1,4 +1,5 @@
 package project.studentrepository.Model;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -8,19 +9,20 @@ import lombok.Setter;
 @Data
 @Setter
 @Getter
-@Table (name = "pdffamss")
+@Table(name = "circular")
 @Entity
-public class PdfFamss {
+public class Circular {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long Id;
+    public Long id;
+    
+    @Column(name = "lecturer_email", nullable = false)
+    private String lecturerEmail;
+    
     private String title;
-    private String supervisor;
-    @Column(name = "project_by")
-    private String projectBy;
-    private String department;
     private String description;
     private Integer year;
+    
     @Lob
     @Column(name = "pdf_data", columnDefinition = "LONGBLOB")
     @JsonIgnore
@@ -28,11 +30,12 @@ public class PdfFamss {
     
     @Transient
     public String getFileUrl() {
-        return "/student/getFile/" + Id;
+        return "/lecturer/getFile/" + id;
     }
     
     @Transient
     public String getFilePath() {
-        return "/student/getFile/" + Id;
+        return "/lecturer/getFile/" + id;
     }
 }
+

@@ -6,6 +6,7 @@ import project.studentrepository.Model.PdfFamss;
 import project.studentrepository.Repository.PdfFamssRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PdfFamssService {
@@ -23,6 +24,10 @@ public class PdfFamssService {
 
     public PdfFamss uploadPdfFile(PdfFamss pdfFamss) {
         return pdfFamssRepository.save(pdfFamss);
+    }
+
+    public Optional<PdfFamss> findById(Long id) {
+        return pdfFamssRepository.findById(id);
     }
 }
 

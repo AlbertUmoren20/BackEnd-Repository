@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "buildCommand": "mvn clean package -DskipTests",
+  "outputDirectory": "target",
+  "builds": [
+    {
+      "src": "pom.xml",
+      "use": "@vercel/java",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ],
+  "env": {
+    "JAVA_HOME": "/usr/lib/jvm/java-17-openjdk-amd64",
+    "SPRING_PROFILES_ACTIVE": "production"
+  },
+  "functions": {
+    "**": {
+      "maxDuration": 60,
+      "memory": 3008
+    }
+  }
+}
+

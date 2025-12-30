@@ -50,5 +50,9 @@ public class PdfDocumentService {
         // If not found, try to find by name (case-insensitive)
         return facultyRepository.findByNameIgnoreCase(nameOrAbbreviation);
     }
+
+    public Optional<PdfDocument> findById(Long id) {
+        return pdfDocumentRepository.findById(id);
+    }
 }
 

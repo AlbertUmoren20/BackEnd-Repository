@@ -27,6 +27,26 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public Student saveStudent(Student student) {
+        // Detect user type from email (contains "admin" or "lecturer")
+        String email = student.getEmail();
+        if (email != null) {
+            String emailLower = email.toLowerCase();
+            if (emailLower.contains("admin")) {
+                student.setRole("admin");
+                // Set matricnumber and level to null for admins
+                student.setMatricnumber(null);
+                student.setLevel(null);
+            } else if (emailLower.contains("lecturer")) {
+                student.setRole("lecturer");
+                // Set matricnumber and level to null for lecturers
+                student.setMatricnumber(null);
+                student.setLevel(null);
+            } else {
+                student.setRole("student");
+                // For students, matricnumber and level are optional (nullable)
+                // They can be null, but if provided, they will be stored
+            }   
+        }
         return studentRepository.save(student);
     }
 
@@ -41,35 +61,56 @@ public class StudentServiceImpl implements StudentService {
         if (student1 != null) {
             String password = loginDTO.getPassword();
             String encodedPassword = student1.getPassword();
-            int matricnumber = loginDTO.getMatricnumber();
-            int storedMatricNumber = student1.getMatricnumber();
 
             // Validate password against database - handle null cases
             Boolean isPwdRight = (password != null && encodedPassword != null) && password.equals(encodedPassword);
-            Boolean isMatricNumberRight = matricnumber == storedMatricNumber; // Matric number check
 
-            if (isPwdRight && isMatricNumberRight) {
+            if (isPwdRight) {
+                // Detect user type from email or stored role
+                String email = loginDTO.getEmail().toLowerCase();
+                String userRole = student1.getRole();
+                
+                // If role is not set, detect from email
+                if (userRole == null || userRole.isEmpty()) {
+                    if (email.contains("admin")) {
+                        userRole = "admin";
+                    } else if (email.contains("lecturer")) {
+                        userRole = "lecturer";
+                    } else {
+                        userRole = "student";
+                    }
+                }
+                
+                // For students, optionally verify matricnumber if provided
+                if ("student".equals(userRole)) {
+                    Integer providedMatricNumber = loginDTO.getMatricnumber();
+                    Integer storedMatricNumber = student1.getMatricnumber();
+                    
+                    // If matricnumber is provided in login, verify it matches
+                    if (providedMatricNumber != null && storedMatricNumber != null) {
+                        if (!providedMatricNumber.equals(storedMatricNumber)) {
+                            return new LoginResponse("Matric number does not match", false, 
+                                null, null, null, null);
+                        }
+                    }
+                }
+                
                 Optional<Student> student = studentRepository.findOneByEmailAndPassword(loginDTO.getEmail(), encodedPassword);
                 if (student.isPresent()) {
                     // Get user information
                     Integer userLevel = student1.getLevel();
                     String userFullname = student1.getFullname();
+                    String userEmail = student1.getEmail();
                     
-                    // Detect admin by checking if email contains "admin" (case-insensitive)
-                    String email = loginDTO.getEmail().toLowerCase();
-                    String userRole = email.contains("admin") ? "admin" : "student";
-                    
-                    return new LoginResponse("Login Successful", true, userLevel, userFullname, userRole);
+                    return new LoginResponse("Login Successful", true, userLevel, userFullname, userRole, userEmail);
                 } else {
-                    return new LoginResponse("Email not found", false, null, null, null); // Assuming this is the intended message
+                    return new LoginResponse("Email not found", false, null, null, null, null);
                 }
-            } else if (!isPwdRight) {
-                return new LoginResponse("Password does not match", false, null, null, null);
-            } else if (!isMatricNumberRight) {
-                return new LoginResponse("Matric number not matched", false, null, null, null);
+            } else {
+                return new LoginResponse("Password does not match", false, null, null, null, null);
             }
         }
-        return new LoginResponse("Email not found", false, null, null, null); // Assuming this is the intended message when student1 is null
+        return new LoginResponse("Email not found", false, null, null, null, null);
     }
 }
 

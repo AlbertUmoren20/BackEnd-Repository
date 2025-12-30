@@ -6,35 +6,22 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Table (name = "student")
+@Table(name = "lecturer")
 @Entity
-public class Student {
+public class Lecturer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String fullname;
     private String password;
     private String email;
-    
-    @Column(nullable = true)
-    private Integer matricnumber;
-    
-    @Column(nullable = true)
-    private Integer level;
-    
-    @Column(nullable = true)
-    private String role; // 'student', 'lecturer', 'admin'
-
 
     @Override
     public String toString() {
-        return "Student [id=" + id + ", " +
+        return "Lecturer [id=" + id + ", " +
                 "fullName=" + fullname + "," +
                 " password=" + password + "," +
-                " email=" + email + ", " +
-                " level=" + level + ", " +
-                "matricnumber = " + matricnumber + "]";
+                " email=" + email + "]";
     }
-
-
 }
+

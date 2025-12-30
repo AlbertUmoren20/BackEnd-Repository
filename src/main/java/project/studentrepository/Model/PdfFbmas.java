@@ -1,5 +1,6 @@
 package project.studentrepository.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -24,6 +25,17 @@ public class PdfFbmas {
     private Integer year;
     @Lob
     @Column(name = "pdf_data", columnDefinition = "LONGBLOB")
+    @JsonIgnore
     private byte[] pdfData;
+    
+    @Transient
+    public String getFileUrl() {
+        return "/student/getFileFbmas/" + Id;
+    }
+    
+    @Transient
+    public String getFilePath() {
+        return "/student/getFileFbmas/" + Id;
+    }
 }
 

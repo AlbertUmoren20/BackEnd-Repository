@@ -1,7 +1,9 @@
 package project.studentrepository.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,7 @@ import java.util.Optional;
 //     methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS} 
 // )
 
-@RestController
+@RestController 
 @RequestMapping("/student")
 public class StudentController {
 
@@ -47,9 +49,26 @@ public class StudentController {
     }
 
     @PostMapping("/add") // Adds data
-    public String add(@RequestBody Student student) {
-        studentService.saveStudent(student); 
-        return "New Student added";
+    public ResponseEntity<?> add(@RequestBody Student student) {
+        try {
+            Student savedStudent = studentService.saveStudent(student);
+            
+            // Return response in the required format
+            LoginResponse response = new LoginResponse();
+            response.setMessage("User registered successfully");
+            response.setUserFullname(savedStudent.getFullname());
+            response.setUserLevel(savedStudent.getLevel());
+            response.setUserEmail(savedStudent.getEmail());
+            response.setStatus(true);
+            response.setUserRole(savedStudent.getRole());
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            LoginResponse errorResponse = new LoginResponse();
+            errorResponse.setMessage("Registration failed: " + e.getMessage());
+            errorResponse.setStatus(false);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+        }
     }
 
     @GetMapping("/getAll")
@@ -242,5 +261,80 @@ public class StudentController {
         Faculty faculty = facultyOptional.get();
         List<PdfDocument> uploads = pdfDocumentService.getUploadsByFaculty(faculty.getId());
         return ResponseEntity.ok(uploads);
+    }
+
+    @GetMapping("/getFile/{id}")
+    public ResponseEntity<byte[]> getFile(@PathVariable Long id) {
+        Optional<PdfFamss> pdfFamssOptional = pdfFamssService.findById(id);
+        
+        if (pdfFamssOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        
+        PdfFamss pdfFamss = pdfFamssOptional.get();
+        byte[] pdfData = pdfFamss.getPdfData();
+        
+        if (pdfData == null || pdfData.length == 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "famss_project_" + id + ".pdf");
+        headers.setContentLength(pdfData.length);
+        
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdfData);
+    }
+
+    @GetMapping("/getFileFbmas/{id}")
+    public ResponseEntity<byte[]> getFileFbmas(@PathVariable Long id) {
+        Optional<PdfFbmas> pdfFbmasOptional = pdfFbmasService.findById(id);
+        
+        if (pdfFbmasOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        
+        PdfFbmas pdfFbmas = pdfFbmasOptional.get();
+        byte[] pdfData = pdfFbmas.getPdfData();
+        
+        if (pdfData == null || pdfData.length == 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "fbmas_project_" + id + ".pdf");
+        headers.setContentLength(pdfData.length);
+        
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdfData);
+    }
+
+    @GetMapping("/getFileDocument/{id}")
+    public ResponseEntity<byte[]> getFileDocument(@PathVariable Long id) {
+        Optional<PdfDocument> pdfDocumentOptional = pdfDocumentService.findById(id);
+        
+        if (pdfDocumentOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        
+        PdfDocument pdfDocument = pdfDocumentOptional.get();
+        byte[] pdfData = pdfDocument.getPdfData();
+        
+        if (pdfData == null || pdfData.length == 0) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("inline", "document_" + id + ".pdf");
+        headers.setContentLength(pdfData.length);
+        
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(pdfData);
     }
     }
