@@ -35,10 +35,12 @@ public class WebConfig implements WebMvcConfigurer {
             "https://repository-react-iota.vercel.app",
             // Vercel preview deployments (wildcard pattern)
             "https://repository-react-*.vercel.app",
-            // All Vercel deployments (catch-all for any Vercel app)
+            // All Vercel deployments (catch-all for any Vercel app - includes frontend AND backend)
             "https://*.vercel.app",
             // Render deployments (all Render apps)
             "https://*.onrender.com",
+            // Specific backend URLs (in case of cross-origin issues)
+            "https://back-end-repository.vercel.app",
             // Localhost for development (any port)
             "http://localhost:*",
             "http://127.0.0.1:*",
@@ -93,6 +95,7 @@ public class WebConfig implements WebMvcConfigurer {
                     "https://repository-react-iota.vercel.app",
                     "https://repository-react-*.vercel.app",
                     "https://*.vercel.app",
+                    "https://back-end-repository.vercel.app",
                     "https://*.onrender.com",
                     "http://localhost:*",
                     "http://127.0.0.1:*",
