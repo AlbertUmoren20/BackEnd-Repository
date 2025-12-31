@@ -15,8 +15,8 @@ COPY src ./src
 # Build the application (skip tests for faster builds)
 RUN mvn clean package -DskipTests -B
 
-# Runtime stage
-FROM openjdk:17-jdk-slim
+# Runtime stage - Using Eclipse Temurin (official replacement for deprecated OpenJDK images)
+FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 
 # Copy the JAR from build stage
