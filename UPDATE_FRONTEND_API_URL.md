@@ -8,7 +8,7 @@
 
 Your frontend is currently calling:
 ```
-https://back-end-repository.vercel.app/student/add
+https://studentrepository-backend.onrender.com/student/add
 ```
 
 But it should be calling:
@@ -26,9 +26,9 @@ Look for `.env`, `.env.production`, or `.env.local` in your frontend project:
 
 ```env
 # ❌ OLD - Remove or update this
-REACT_APP_API_URL=https://back-end-repository.vercel.app
+REACT_APP_API_URL=https://studentrepository-backend.onrender.com
 # or
-VITE_API_URL=https://back-end-repository.vercel.app
+VITE_API_URL=https://studentrepository-backend.onrender.com
 
 # ✅ NEW - Update to Render URL
 REACT_APP_API_URL=https://studentrepository-backend.onrender.com
@@ -48,7 +48,7 @@ Update them like this:
 
 ```javascript
 // ❌ OLD
-export const API_BASE_URL = 'https://back-end-repository.vercel.app';
+export const API_BASE_URL = 'https://studentrepository-backend.onrender.com';
 
 // ✅ NEW
 export const API_BASE_URL = 'https://studentrepository-backend.onrender.com';
@@ -60,7 +60,7 @@ If the URL is hardcoded in your components, find `SignUp.jsx` around line 70:
 
 ```javascript
 // ❌ OLD - Around line 70 in SignUp.jsx
-const response = await fetch('https://back-end-repository.vercel.app/student/add', {
+const response = await fetch('https://studentrepository-backend.onrender.com/student/add', {
   method: 'POST',
   headers: {
     'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ If you have an API service file (like `api.js` or `axios.js`):
 ```javascript
 // ❌ OLD
 const API = axios.create({
-  baseURL: 'https://back-end-repository.vercel.app',
+  baseURL: 'https://studentrepository-backend.onrender.com',
 });
 
 // ✅ NEW
@@ -151,7 +151,7 @@ If you have many files with the old URL, use search and replace in your IDE:
 
 **Find:**
 ```
-https://back-end-repository.vercel.app
+https://studentrepository-backend.onrender.com
 ```
 
 **Replace with:**

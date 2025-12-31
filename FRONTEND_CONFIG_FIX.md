@@ -4,7 +4,7 @@
 
 Your frontend is currently calling:
 ```
-https://back-end-repository.vercel.app/student/add
+https://studentrepository-backend.onrender.com/student/add
 ```
 
 But your backend is now deployed on **Render**, not Vercel!
@@ -35,9 +35,9 @@ Update your frontend API configuration file. Look for files like:
 **Find this line:**
 ```javascript
 // ❌ OLD - Vercel backend (doesn't exist or not working)
-const API_URL = 'https://back-end-repository.vercel.app';
+const API_URL = 'https://studentrepository-backend.onrender.com';
 // or
-const API_BASE_URL = 'https://back-end-repository.vercel.app';
+const API_BASE_URL = 'https://studentrepository-backend.onrender.com';
 ```
 
 **Replace with your Render URL:**

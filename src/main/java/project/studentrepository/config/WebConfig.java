@@ -40,7 +40,7 @@ public class WebConfig implements WebMvcConfigurer {
             // Render deployments (all Render apps)
             "https://*.onrender.com",
             // Specific backend URLs (in case of cross-origin issues)
-            "https://back-end-repository.vercel.app",
+            "https://studentrepository-backend.onrender.com",
             // Localhost for development (any port)
             "http://localhost:*",
             "http://127.0.0.1:*",
@@ -95,7 +95,7 @@ public class WebConfig implements WebMvcConfigurer {
                     "https://repository-react-iota.vercel.app",
                     "https://repository-react-*.vercel.app",
                     "https://*.vercel.app",
-                    "https://back-end-repository.vercel.app",
+                    "https://studentrepository-backend.onrender.com",
                     "https://*.onrender.com",
                     "http://localhost:*",
                     "http://127.0.0.1:*",
