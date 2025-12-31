@@ -1,15 +1,26 @@
-#envVars:
-#  - key: SPRING_PROFILES_ACTIVE
-#    value: production
-#  - key: DATABASE_URL
-#    fromDatabase:
-#      name: studentrepository-db  # Matches your PostgreSQL service name in Render
-#      property: connectionString
-
-envVars:
-  - key: SPRING_DATASOURCE_URL
-    value: jdbc:postgresql://dpg-d95egnbu.../studentLogin_ma61?sslmode=require
-  - key: SPRING_DATASOURCE_USERNAME
-    value: studentlogin_ma6i_user
-  - key: SPRING_DATASOURCE_PASSWORD
-    value: k826AUm5aSujEHNG1heMEf01e7v6fZkS
+services:
+  # Spring Boot Web Service
+  - type: web
+    name: studentrepository-backend
+    runtime: docker
+    plan: free  # Change to 'starter' or 'standard' for production
+    region: oregon  # Options: oregon, frankfurt, singapore, mumbai, tokyo, ohio
+    envVars:
+      # Application Configuration
+      - key: SPRING_PROFILES_ACTIVE
+        value: production
+      # Railway MySQL Database Configuration
+      # IMPORTANT: Set SPRING_DATASOURCE_PASSWORD as a Secret in Render Dashboard
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://turntable.proxy.rlwy.net:55320/e-repository?useSSL=true&requireSSL=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - key: SPRING_DATASOURCE_USERNAME
+        value: root
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false  # Configure this manually in Render dashboard as a Secret
+      # JPA Configuration
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_JPA_SHOW_SQL
+        value: "false"  # Set to false in production for security
+      - key: SPRING_JPA_OPEN_IN_VIEW
+        value: "false"

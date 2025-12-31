@@ -31,12 +31,14 @@ public class WebConfig implements WebMvcConfigurer {
         // Patterns allow wildcards which is needed for Vercel preview deployments
         // Using allowedOriginPatterns instead of allowedOrigins to support wildcards
         config.setAllowedOriginPatterns(Arrays.asList(
-            // Production frontend URL
+            // Production frontend URL (Vercel)
             "https://repository-react-iota.vercel.app",
             // Vercel preview deployments (wildcard pattern)
             "https://repository-react-*.vercel.app",
             // All Vercel deployments (catch-all for any Vercel app)
             "https://*.vercel.app",
+            // Render deployments (all Render apps)
+            "https://*.onrender.com",
             // Localhost for development (any port)
             "http://localhost:*",
             "http://127.0.0.1:*",
@@ -91,6 +93,7 @@ public class WebConfig implements WebMvcConfigurer {
                     "https://repository-react-iota.vercel.app",
                     "https://repository-react-*.vercel.app",
                     "https://*.vercel.app",
+                    "https://*.onrender.com",
                     "http://localhost:*",
                     "http://127.0.0.1:*",
                     "http://localhost:3000",
