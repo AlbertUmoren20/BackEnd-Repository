@@ -83,14 +83,15 @@ public class StudentServiceImpl implements StudentService {
                 
                 // For students, optionally verify matricnumber if provided
                 if ("student".equals(userRole)) {
-                    Integer providedMatricNumber = loginDTO.getMatricnumber();
-                    Integer storedMatricNumber = student1.getMatricnumber();
+                    String providedMatricNumber = loginDTO.getMatricnumber();
+                    String storedMatricNumber = student1.getMatricnumber();
                     
                     // If matricnumber is provided in login, verify it matches
+                    // Matric numbers can be alphanumeric and of any length
                     if (providedMatricNumber != null && storedMatricNumber != null) {
                         if (!providedMatricNumber.equals(storedMatricNumber)) {
                             return new LoginResponse("Matric number does not match", false, 
-                                null, null, null, null);
+                                null, null, null, null, null);
                         }
                     }
                 }
@@ -101,16 +102,17 @@ public class StudentServiceImpl implements StudentService {
                     Integer userLevel = student1.getLevel();
                     String userFullname = student1.getFullname();
                     String userEmail = student1.getEmail();
+                    String userMatricnumber = student1.getMatricnumber();
                     
-                    return new LoginResponse("Login Successful", true, userLevel, userFullname, userRole, userEmail);
+                    return new LoginResponse("Login Successful", true, userLevel, userFullname, userRole, userEmail, userMatricnumber);
                 } else {
-                    return new LoginResponse("Email not found", false, null, null, null, null);
+                    return new LoginResponse("Email not found", false, null, null, null, null, null);
                 }
             } else {
-                return new LoginResponse("Password does not match", false, null, null, null, null);
+                return new LoginResponse("Password does not match", false, null, null, null, null, null);
             }
         }
-        return new LoginResponse("Email not found", false, null, null, null, null);
+        return new LoginResponse("Email not found", false, null, null, null, null, null);
     }
 }
 
