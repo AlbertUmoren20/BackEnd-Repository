@@ -1,5 +1,6 @@
 package project.studentrepository.Controller;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,7 @@ public class StudentController {
     }
 
     @PostMapping("/add") // Adds data
-    public ResponseEntity<?> add(@RequestBody Student student) {
+    public ResponseEntity<?> add(@Valid @RequestBody Student student) {
         try {
             Student savedStudent = studentService.saveStudent(student);
             
@@ -82,7 +83,7 @@ public class StudentController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginStudent(@RequestBody LoginDTO logindto) {
+    public ResponseEntity<?> loginStudent(@Valid @RequestBody LoginDTO logindto) {
         LoginResponse loginResponse = studentService.loginStudent(logindto);
         
         // Return appropriate HTTP status codes based on login result

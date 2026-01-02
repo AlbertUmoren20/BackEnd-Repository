@@ -1,6 +1,7 @@
 package project.studentrepository.Model;
 
 
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +11,9 @@ public class StudentDto {
     private String fullname;
     private String password;
     private String email;
-    private Integer matricnumber;
+    
+    @Size(max = 20, message = "Matric number must not exceed 20 characters")
+    private String matricnumber;
     private Integer level;
 
     public StudentDto() {

@@ -1,6 +1,7 @@
 package project.studentrepository.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ public class Student {
     private String email;
     
     @Column(name = "matricnumber", length = 20, nullable = true)
+    @Size(max = 20, message = "Matric number must not exceed 20 characters")
     private String matricnumber;
     
     @Column(nullable = true)

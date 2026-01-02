@@ -11,7 +11,9 @@ public class LoginResponse {
     Integer userLevel;
     String userFullname;
     String userRole;
-    String userEmail;
+    String userEmail;   
+    String userMatricnumber;
+   
 
     public LoginResponse() {
     }
@@ -21,13 +23,14 @@ public class LoginResponse {
         this.status = status;
     }
 
-    public LoginResponse(String message, Boolean status, Integer userLevel, String userFullname, String userRole, String userEmail) {
+    public LoginResponse(String message, Boolean status, Integer userLevel, String userFullname, String userRole, String userEmail, String userMatricnumber) {
         this.message = message;
         this.status = status;
         this.userLevel = userLevel;
         this.userFullname = userFullname;
         this.userRole = userRole;
         this.userEmail = userEmail;
+        this.userMatricnumber = userMatricnumber;
     }
 
     @Override
@@ -39,6 +42,7 @@ public class LoginResponse {
                 ", userFullname='" + userFullname + '\'' +
                 ", userRole='" + userRole + '\'' +
                 ", userEmail='" + userEmail + '\'' +
-                '}';
+                ", userMatricnumber='" + userMatricnumber + '\'' +
+                "}";
     }
 }

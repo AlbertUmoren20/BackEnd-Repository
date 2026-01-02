@@ -47,15 +47,15 @@ public class LecturerServiceImpl implements LecturerService {
                     String email = loginDTO.getEmail().toLowerCase();
                     String userRole = email.contains("lecturer") ? "lecturer" : "student";
                     
-                    return new LoginResponse("Login Successful", true, null, userFullname, userRole, userEmail);
+                    return new LoginResponse("Login Successful", true, null, userFullname, userRole, userEmail, null);
                 } else {
-                    return new LoginResponse("Email not found", false, null, null, null, null);
+                    return new LoginResponse("Email not found", false, null, null, null, null, null);
                 }
             } else {
-                return new LoginResponse("Password does not match", false, null, null, null, null);
+                return new LoginResponse("Password does not match", false, null, null, null, null, null);
             }
         }
-        return new LoginResponse("Email not found", false, null, null, null, null);
+        return new LoginResponse("Email not found", false, null, null, null, null, null);
     }
 }
 
