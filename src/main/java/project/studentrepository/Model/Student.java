@@ -16,8 +16,8 @@ public class Student {
     private String password;
     private String email;
     
-    @Column(nullable = true)
-    private Integer matricnumber;
+    @Column(name = "matricnumber", length = 20, nullable = true)
+    private String matricnumber;
     
     @Column(nullable = true)
     private Integer level;
